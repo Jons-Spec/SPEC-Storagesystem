@@ -1,8 +1,23 @@
 -- Create database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS `SPEC-Storage`;
+CREATE DATABASE IF NOT EXISTS `spec-storage`;
 
 -- Use the database
-USE `SPEC-Storage`;
+USE `spec-storage`;
+
+-- Create the User table
+CREATE TABLE IF NOT EXISTS `User` (
+    `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `is_admin` BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+-- Create the Category table
+CREATE TABLE IF NOT EXISTS `Category` (
+    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT
+);
 
 -- Create the Item table
 CREATE TABLE IF NOT EXISTS `Item` (
@@ -15,21 +30,6 @@ CREATE TABLE IF NOT EXISTS `Item` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`category_id`) REFERENCES `Category`(`category_id`)
-);
-
--- Create the Category table
-CREATE TABLE IF NOT EXISTS `Category` (
-    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL,
-    `description` TEXT
-);
-
--- Create the User table
-CREATE TABLE IF NOT EXISTS `User` (
-    `user_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `username` VARCHAR(255) NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
-    `is_admin` BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- Create the Transactions table

@@ -14,13 +14,11 @@ load_dotenv(dotenv_path)
 HOST = os.environ.get('DB_HOST')
 USERNAME = os.environ.get('DB_USER')
 PASSWORD = os.environ.get('DB_PASS')
-DATABASE = os.environ.get('DB_NAME')
 PORT = int(os.environ.get('DB_PORT'))
 
 credentials = {
     "DB_HOST": HOST,
     "DB_USER": USERNAME,
     "DB_PASS": PASSWORD,
-    "DB_NAME": DATABASE,
     "DB_PORT": PORT,
 }

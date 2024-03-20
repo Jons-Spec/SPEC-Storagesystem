@@ -1,6 +1,5 @@
 from typing import Dict
 import mysql.connector as mysql
-
 class DBConnection:
     
     __instance = None
@@ -19,15 +18,21 @@ class DBConnection:
         else:
             raise Exception("Can't create another MySQL connection")
         
-    def create_database(self, sql_file_path: str) -> None:
+    def create_database(self, sql_file_path: str) -> bool:
         cursor = DBConnection.__instance.cursor()
-        
-        with open(sql_file_path, 'r') as sql_file:
-            sql_script = sql_file.read()
 
-        cursor.execute(sql_script, multi=True)
+        with open(sql_file_path, 'r') as sql_file:
+            sql_commands = sql_file.read().split(';')
+
+        for command in sql_commands:
+            if command.strip():
+                cursor.execute(command)
+
         cursor.close()
-    
+        print("Database created successfully.")
+        return True
+
+    @staticmethod
     def get_database_name_from_sql_file(sql_file_path: str) -> str:
         with open(sql_file_path, 'r') as sql_file:
             for line in sql_file:
@@ -36,11 +41,10 @@ class DBConnection:
                     return parts[1].strip('`;')  # Extracting the database name from the USE statement
         return None  # Database name not found
 
-
     @staticmethod
-    def get_instance(credantials: Dict[str, str]) -> object:
+    def get_instance(credentials: Dict[str, str]) -> object:
         if not DBConnection.__instance:
-            DBConnection(credantials['DB_HOST'], credantials['DB_USER'], credantials['DB_PASS'], credantials['DB_PORT'])
+            DBConnection(credentials['DB_HOST'], credentials['DB_USER'], credentials['DB_PASS'], credentials['DB_PORT'])
         return DBConnection.__instance
     
     @staticmethod
