@@ -24,6 +24,14 @@ CREATE TABLE IF NOT EXISTS `Category` (
     `description` TEXT
 );
 
+-- Create the User table
+CREATE TABLE IF NOT EXISTS `User` (
+    `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `is_admin` BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 -- Create the Transactions table
 CREATE TABLE IF NOT EXISTS `Transactions` (
     `transaction_id` INT AUTO_INCREMENT PRIMARY KEY,
