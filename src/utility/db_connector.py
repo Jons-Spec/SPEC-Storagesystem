@@ -4,17 +4,17 @@ class DBConnection:
     
     __instance = None
 
-    def __init__(self, host: str, username: str, password: str, port: str) -> None:
+    def __init__(self, host: str, username: str, password: str, port: str, database: str) -> None:
         self.host = host
         self.user = username
         self.password = password
         self.port = port
-        self.database = None
+        self.database = database
         
         if DBConnection.__instance is None:
-            DBConnection.__instance = mysql.connect(host=self.host, user=self.user, password=self.password, port=self.port)
-            if self.database:
-                self.create_database(self.database)
+            DBConnection.__instance = mysql.connect(host=self.host, user=self.user, password=self.password, port=self.port, database=self.database)
+            if not self.database:
+                self.create_database(database)
         else:
             raise Exception("Can't create another MySQL connection")
         
@@ -42,12 +42,13 @@ class DBConnection:
         return None  # Database name not found
 
     @staticmethod
-    def get_instance(credentials: Dict[str, str]) -> object:
+    def get_instance(credentials: Dict[str, str], database: str) -> object:
         if not DBConnection.__instance:
-            DBConnection(credentials['DB_HOST'], credentials['DB_USER'], credentials['DB_PASS'], credentials['DB_PORT'])
+            DBConnection(credentials['DB_HOST'], credentials['DB_USER'], credentials['DB_PASS'], credentials['DB_PORT'], database)
         return DBConnection.__instance
     
     @staticmethod
     def close_instance() -> None:
         DBConnection.__instance.close()
+
 
