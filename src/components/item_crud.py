@@ -1,12 +1,30 @@
-from typing import Tuple, Optional
+from typing import List, Tuple, Optional
 from ..utility.db_connector import DBConnection
 from ..classes.item import Item
+from ..utility.db_credentials import credentials
 
 class ItemCRUD:
+
+    @staticmethod
+    def get_all_items() -> List[Tuple[int, str, str, int, float, int]]:
+        try:
+            connection = DBConnection.get_instance(credentials)
+            cursor = connection.cursor()
+
+            query = "SELECT * FROM Item"
+            cursor.execute(query)
+            items = cursor.fetchall()
+
+            cursor.close()
+            return items
+        except Exception as e:
+            print(f"Error fetching items: {e}")
+            return []
+
     @staticmethod
     def create_item(name: str, description: str, category_id: int, selling_price: float, quantity: int) -> bool:
         try:
-            connection = DBConnection.get_instance()
+            connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
             query = "INSERT INTO Item (name, description, category_id, selling_price, quantity) VALUES (%s, %s, %s, %s, %s)"
@@ -22,7 +40,7 @@ class ItemCRUD:
     @staticmethod
     def read_item(item_id: int) -> Optional[Item]:
         try:
-            connection = DBConnection.get_instance()
+            connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
             query = "SELECT * FROM Item WHERE id = %s"
@@ -43,7 +61,7 @@ class ItemCRUD:
     @staticmethod
     def update_item(item: Item) -> bool:
         try:
-            connection = DBConnection.get_instance()
+            connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
             query = "UPDATE Item SET name=?, description=?, category_id=?, selling_price=?, quantity=? WHERE id=?"
@@ -59,7 +77,7 @@ class ItemCRUD:
     @staticmethod
     def delete_item(item_id: int) -> Optional[Item]:
         try:
-            connection = DBConnection.get_instance()
+            connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
             query = "DELETE FROM Item WHERE id = %s"
