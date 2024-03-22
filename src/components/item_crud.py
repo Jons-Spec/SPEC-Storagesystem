@@ -2,6 +2,7 @@ from typing import List, Tuple, Optional
 from ..utility.db_connector import DBConnection
 from ..classes.item import Item
 from ..utility.db_credentials import credentials
+from datetime import datetime
 
 class ItemCRUD:
 
@@ -26,9 +27,10 @@ class ItemCRUD:
         try:
             connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
+            creation_date = datetime.now()
 
-            query = "INSERT INTO Item (name, description, category_id, selling_price, quantity) VALUES (%s, %s, %s, %s, %s)"
-            cursor.execute(query, (name, description, category_id, selling_price, quantity))
+            query = "INSERT INTO Item (name, description, category_id, selling_price, quantity, created_at) VALUES (%s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (name, description, category_id, selling_price, quantity, creation_date))
 
             connection.commit()
             cursor.close()
@@ -43,13 +45,12 @@ class ItemCRUD:
             connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
-            query = "SELECT * FROM Item WHERE id = %s"
+            query = "SELECT * FROM Item WHERE item_id = %s"
             cursor.execute(query, (item_id,))
             item_data = cursor.fetchone()
 
             if item_data:
-                item = Item(*item_data)
-                return item
+                return item_data
             else:
                 return None
         except Exception as e:
@@ -63,9 +64,10 @@ class ItemCRUD:
         try:
             connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
+            item.update()
 
-            query = "UPDATE Item SET name=?, description=?, category_id=?, selling_price=?, quantity=? WHERE id=?"
-            cursor.execute(query, (item.name, item.description, item.category_id, item.selling_price, item.quantity, item.id))
+            query = "UPDATE Item SET name=?, description=?, category_id=?, selling_price=?, quantity=?, updated_at=? WHERE item_id=?"
+            cursor.execute(query, (item.name, item.description, item.category_id, item.selling_price, item.quantity, item.updated_at, item.id))
 
             connection.commit()  # Commit the changes to the database
             cursor.close()
@@ -80,7 +82,7 @@ class ItemCRUD:
             connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
-            query = "DELETE FROM Item WHERE id = %s"
+            query = "DELETE FROM Item WHERE item_id = %s"
             cursor.execute(query, (item_id,))
             connection.commit()
 

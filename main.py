@@ -3,6 +3,8 @@ from src.utility.db_connector import DBConnection
 from src.utility.db_credentials import credentials
 from src.routers.item_router import item_routes
 
+
+
 def create_app():
     # Initialize Flask app
     app = Flask(__name__)
@@ -14,7 +16,11 @@ def create_app():
 
 def main():
     # Example usage
-    #connection = DBConnection.get_instance(credentials)
+    connection = DBConnection.get_instance(credentials)
+    if connection:
+        print("Connection to databse created")
+    else:
+        print("No database connection")
 
     #created = DBConnection.create_database(connection, sql_file_path)
 

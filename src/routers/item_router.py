@@ -14,7 +14,17 @@ def create_item():
 
 @item_routes.route('/items/<int:item_id>', methods=['GET'])
 def get_item(item_id: int):
-    item = ItemCRUD.read_item(item_id)
+    item_from_db = ItemCRUD.read_item(item_id)
+    item = {
+        "id": item_from_db[0],
+        "name": item_from_db[1],
+        "description": item_from_db[2],
+        "category_id": item_from_db[3],
+        "selling_price": item_from_db[4],
+        "quantity": item_from_db[5],
+        "created at": item_from_db[6],
+        "updated at": item_from_db[7]
+        }
     if item:
         return jsonify(item), 200
     else:
@@ -39,5 +49,19 @@ def delete_item(item_id: int):
 
 @item_routes.route('/items', methods=['GET'])
 def get_all_items():
-    items = ItemCRUD.get_all_items()
-    return jsonify(items), 200
+    items_from_db = ItemCRUD.get_all_items()
+    items = []
+    for item in items_from_db:
+        item = {
+            "id": item[0],
+            "name": item[1],
+            "description": item[2],
+            "category_id": item[3],
+            "selling_price": item[4],
+            "quantity": item[5]
+        }
+        items.append(item)
+    if items_from_db and items:
+        return jsonify(items), 200
+    else:
+        return jsonify({"error": "No items found"}), 404
