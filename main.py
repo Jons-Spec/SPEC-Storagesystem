@@ -2,6 +2,7 @@ from flask import Flask
 from src.utility.db_connector import DBConnection
 from src.utility.db_credentials import credentials
 from src.routers.item_router import item_routes
+from src.routers.user_router import user_routes
 
 
 
@@ -11,6 +12,12 @@ def create_app():
 
     # Register item routes
     app.register_blueprint(item_routes)
+
+    # Register user routes
+    app.register_blueprint(user_routes)
+
+    # Set secret key for session management
+    app.secret_key = 'your_secret_key'
 
     return app
 
