@@ -12,6 +12,14 @@ def create_item():
     else:
         return jsonify({"error": "Failed to create item"}), 500
 
+@item_routes.route("/items/category/<int:category_id>", methods=["GET"])
+def get_items_by_category(category_id: int):
+    items = ItemCRUD.get_items_by_category(category_id)
+    if items:
+        return jsonify(items), 200
+    else:
+        return jsonify({"message": "No items found for the specified category"}), 404
+
 @item_routes.route('/items/<int:item_id>', methods=['GET'])
 def get_item(item_id: int):
     item_from_db = ItemCRUD.read_item(item_id)

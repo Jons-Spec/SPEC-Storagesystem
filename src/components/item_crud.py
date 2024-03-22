@@ -57,7 +57,21 @@ class ItemCRUD:
             print(f"Error reading item: {e}")
             return None
 
-    # Implement update_item, delete_item, and other CRUD operations similarly
+    @staticmethod
+    def get_items_by_category(category_id: int) -> List[Tuple[int, str, str, int, float, int]]:
+        try:
+            connection = DBConnection.get_instance(credentials)
+            cursor = connection.cursor()
+
+            query = "SELECT * FROM Item WHERE category_id = %s"
+            cursor.execute(query, (category_id,))
+            items = cursor.fetchall()
+
+            cursor.close()
+            return items
+        except Exception as e:
+            print(f"Error fetching items by category: {e}")
+            return []
         
     @staticmethod
     def update_item(item: Item) -> bool:
