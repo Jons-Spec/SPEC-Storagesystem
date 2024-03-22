@@ -3,6 +3,7 @@ from src.utility.db_connector import DBConnection
 from src.utility.db_credentials import credentials
 from src.routers.item_router import item_routes
 from src.routers.user_router import user_routes
+from src.components.user_crud import UserCRUD
 
 
 
@@ -30,7 +31,13 @@ def main():
         print("No database connection")
 
     #created = DBConnection.create_database(connection, sql_file_path)
-
+        
+    #test admin user for later    
+    admin_user = UserCRUD.create_user("adminuser","admin123",True)
+    if admin_user:
+        print("user created")
+    else:
+        print("user already exsists")
     # Create the Flask app
     app = create_app()
 

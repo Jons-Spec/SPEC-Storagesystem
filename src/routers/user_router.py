@@ -1,6 +1,6 @@
+import bcrypt
 from flask import Blueprint, request, session, jsonify, redirect
 from ..components.user_crud import UserCRUD
-import bcrypt
 
 user_routes = Blueprint('user_routes', __name__)
 

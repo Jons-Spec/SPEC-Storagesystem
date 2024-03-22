@@ -10,11 +10,11 @@ class UserCRUD:
             # Hash the password
             hashed_password = hashpw(password.encode('utf-8'), gensalt())
 
-            connection = DBConnection.get_instance()
+            connection = DBConnection.get_instance(credentials)
             cursor = connection.cursor()
 
             # Insert user data into the database
-            query = "INSERT INTO User (username, password, isAdmin) VALUES (%s, %s, %s)"
+            query = "INSERT INTO User (username, password, is_admin) VALUES (%s, %s, %s)"
             cursor.execute(query, (username, hashed_password, isAdmin))
 
             connection.commit()
