@@ -80,7 +80,7 @@ class ItemCRUD:
             cursor = connection.cursor()
             item.update()
 
-            query = "UPDATE Item SET name=?, description=?, category_id=?, selling_price=?, quantity=?, updated_at=? WHERE item_id=?"
+            query = "UPDATE Item SET name=%s, description=%s, category_id=%s, selling_price=%s, quantity=%s, updated_at=%s WHERE item_id=%s"
             cursor.execute(query, (item.name, item.description, item.category_id, item.selling_price, item.quantity, item.updated_at, item.id))
 
             connection.commit()  # Commit the changes to the database

@@ -5,13 +5,13 @@ from ..components.user_crud import UserCRUD
 user_routes = Blueprint('user_routes', __name__)
 
 @user_routes.route('/login', methods=['POST'])
-def login():
+async def login():
     # Get username and password from request
     username = request.json.get('username')
     password = request.json.get('password')
 
     # Retrieve user details from the database
-    user_data = UserCRUD.read_user_by_username(username)
+    user_data = await UserCRUD.read_user_by_username(username)
 
     if user_data:
         # Verify password
@@ -28,7 +28,7 @@ def login():
         return jsonify({'error': 'User not found'}), 404
 
 @user_routes.route('/logout', methods=['GET'])
-def logout():
+async def logout():
     # Clear session variables
     session.clear()
     return jsonify({'message': 'Logout successful'}), 200

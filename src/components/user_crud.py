@@ -23,14 +23,47 @@ class UserCRUD:
         except Exception as e:
             print(f"Error creating user: {e}")
             return False
-
+    
     @staticmethod
-    def read_user(user_id: int) -> Tuple[int, str, bool]:
-        # Implementation remains the same
-        pass
+    def read_user_by_username(username: str) -> Optional[Tuple[str, str, bool]]:
+        try:
+            connection = DBConnection.get_instance(credentials)
+            cursor = connection.cursor()
 
-    # Implement update_user, delete_user, and other CRUD operations similarly
+            # Retrieve user data from the database based on username
+            query = "SELECT username, password, is_admin FROM User WHERE username = %s"
+            cursor.execute(query, (username,))
+            user_data = cursor.fetchone()
 
+            cursor.close()
+
+            if user_data:
+                return user_data
+            else:
+                return None
+        except Exception as e:
+            print(f"Error reading user: {e}")
+            return None
+        
+    @staticmethod
+    def update_user(username: str, password: str, isAdmin: bool, search_name: str) -> bool:
+        try:
+            # Hash the password
+            hashed_password = hashpw(password.encode('utf-8'), gensalt())
+            connection = DBConnection.get_instance(credentials)
+            cursor = connection.cursor()
+
+            query = "UPDATE User SET username=%s, password=%s, is_admin=%s WHERE username=%s"
+            cursor.execute(query, (username, hashed_password, isAdmin, search_name))
+
+            connection.commit()  # Commit the changes to the database
+            cursor.close()
+            return True  # Placeholder success response
+        except Exception as e:
+            print(f"Error updating user: {e}")
+            return None
+            
+    # Maybe not needed
     @staticmethod
     def authenticate_user(username: str, password: str) -> Optional[bool]:
         try:
